@@ -34,6 +34,10 @@ import { getCharacterDialogue } from "@/function/dialogue/info";
 import { handleCharacterChatRequest } from "@/function/dialogue/chat";
 import { switchDialogueBranch } from "@/function/dialogue/truncate";
 import { deleteDialogueNode } from "@/function/dialogue/delete";
+import { translateGreeting } from "@/function/translate/character-translator";
+import { LocalCharacterRecordOperations } from "@/lib/data/roleplay/character-record-operation";
+import { LocalCharacterDialogueOperations } from "@/lib/data/roleplay/character-dialogue-operation";
+import { LLMConfig } from "@/lib/nodeflow/LLMNode/LLMNodeTools";
 import CharacterChatPanel from "@/components/CharacterChatPanel";
 import WorldBookEditor from "@/components/WorldBookEditor";
 import RegexScriptEditor from "@/components/RegexScriptEditor";
@@ -119,6 +123,7 @@ export default function CharacterPage() {
   const [errorToast, setErrorToast] = useState({
     isVisible: false,
     message: "",
+    type: "error" as "error" | "success" | "warning",
   });
   const [isMobile, setIsMobile] = useState(false);
 
@@ -126,14 +131,24 @@ export default function CharacterPage() {
     setErrorToast({
       isVisible: true,
       message,
+      type: "error",
+    });
+  }, []);
+
+  const showSuccessToast = useCallback((message: string) => {
+    setErrorToast({
+      isVisible: true,
+      message,
+      type: "success",
     });
   }, []);
 
   const hideErrorToast = useCallback(() => {
-    setErrorToast({
+    setErrorToast((prev) => ({
+      ...prev,
       isVisible: false,
       message: "",
-    });
+    }));
   }, []);
 
   // Mobile detection
@@ -208,6 +223,105 @@ export default function CharacterPage() {
     }
   };
 
+  const handleTranslateFirstMessage = async () => {
+    if (!characterId) return;
+
+    try {
+      setIsLoading(true);
+      setLoadingPhase(t("characterChat.translating") || "Translating...");
+
+      const charRecord = await LocalCharacterRecordOperations.getCharacterById(
+        characterId,
+      );
+      if (!charRecord) throw new Error("Character not found");
+
+      // Get current dialogue tree and node
+      const dialogueTree =
+        await LocalCharacterDialogueOperations.getDialogueTreeById(characterId);
+      if (!dialogueTree) throw new Error("Dialogue tree not found");
+
+      const currentNodeId = dialogueTree.current_nodeId;
+      const currentNode = dialogueTree.nodes.find(
+        (n: any) => n.nodeId === currentNodeId,
+      );
+
+      if (!currentNode) throw new Error("Current node not found");
+
+      const contentToTranslate =
+        currentNode.parsedContent?.regexResult || currentNode.content;
+
+      let translatedText = "";
+
+      // Check if translation already exists
+      if (
+        charRecord.translated_greetings &&
+        charRecord.translated_greetings[contentToTranslate]
+      ) {
+        translatedText = charRecord.translated_greetings[contentToTranslate];
+      } else {
+        // Prepare LLM Config
+        const language = localStorage.getItem("language") || "zh";
+        const llmType = localStorage.getItem("llmType") || "openai";
+        const modelName =
+          localStorage.getItem(
+            llmType === "openai" ? "openaiModel" : "ollamaModel",
+          ) || "";
+        const baseUrl =
+          localStorage.getItem(
+            llmType === "openai" ? "openaiBaseUrl" : "ollamaBaseUrl",
+          ) || "";
+        const apiKey =
+          llmType === "openai" ? localStorage.getItem("openaiApiKey") || "" : "";
+
+        const config: LLMConfig = {
+          modelName,
+          apiKey,
+          baseUrl,
+          llmType: llmType as "openai" | "ollama",
+          language: language as "zh" | "en",
+          streaming: false,
+        };
+
+        translatedText = await translateGreeting(contentToTranslate, config);
+
+        // Save translation to character record
+        await LocalCharacterRecordOperations.updateCharacter(
+          characterId,
+          {}, // No changes to raw data
+          { [contentToTranslate]: translatedText }, // Add to translated_greetings
+        );
+      }
+
+      const updatedParsedContent = currentNode.parsedContent
+        ? { ...currentNode.parsedContent, regexResult: translatedText }
+        : { regexResult: translatedText };
+
+      // Update Dialogue Node - Update parsedContent.regexResult AND assistantResponse/fullResponse
+      // as requested to ensure consistency across the data structure.
+      await LocalCharacterDialogueOperations.updateNodeInDialogueTree(
+        characterId,
+        currentNodeId,
+        {
+          assistantResponse: translatedText,
+          fullResponse: translatedText,
+          parsedContent: updatedParsedContent,
+        },
+      );
+
+      // Update UI
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === currentNodeId ? { ...msg, content: translatedText } : msg,
+        ),
+      );
+    } catch (e) {
+      console.error("Translation failed:", e);
+      showErrorToast(t("Translation failed") || "Translation failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleRegenerate = async (nodeId: string) => {
     if (!characterId) return;
 
@@ -234,7 +348,7 @@ export default function CharacterPage() {
       }
 
       if (!userMessage) {
-        console.warn("No previous user message found for regeneration");
+        await handleTranslateFirstMessage();
         return;
       }
 
@@ -339,11 +453,13 @@ export default function CharacterPage() {
         const currentLanguage = localStorage.getItem("language") as "en" | "zh";
 
         setLoadingPhase(t("characterChat.loading"));
+        console.log("Fetching dialogue for:", characterId); // Debug log
         const response = await getCharacterDialogue(
           characterId,
           currentLanguage,
           username,
         );
+        console.log("Dialogue response:", response); // Debug log
         if (!response.success) {
           throw new Error(`Failed to load character: ${response}`);
         }
@@ -795,7 +911,7 @@ export default function CharacterPage() {
         }}
       />
       <Toast
-        type="error"
+        type={errorToast.type || "error"}
         message={errorToast.message}
         isVisible={errorToast.isVisible}
         onClose={hideErrorToast}
