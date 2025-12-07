@@ -550,12 +550,29 @@ export default function ModelSidebar({ isOpen, toggleSidebar }: ModelSidebarProp
       }
 
       // Initialize the appropriate LangChain client based on LLM type
-      const chatModel = llmType === "openai" 
+      const headers: Record<string, string> = {};
+
+      if (llmType === "openai") {
+        if (
+          process.env.NODE_ENV === "development" &&
+          typeof window !== "undefined" &&
+          baseUrl &&
+          !baseUrl.includes("localhost") &&
+          !baseUrl.includes("127.0.0.1")
+        ) {
+          headers["X-Target-Url"] = baseUrl;
+          finalBaseUrl = window.location.origin + "/api/proxy";
+          console.log(`[ModelSidebar] Using local proxy for ${baseUrl}`);
+        }
+      }
+
+      const chatModel = llmType === "openai"
         ? new ChatOpenAI({
           modelName: model,
           openAIApiKey: apiKey,
           configuration: {
-            baseURL: baseUrl,
+            baseURL: finalBaseUrl,
+            defaultHeaders: headers,
           },
           timeout: 30000, // 30 second timeout
         })

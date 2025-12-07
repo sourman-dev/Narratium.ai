@@ -108,11 +108,26 @@ export class CharacterDialogue {
     }
 
     if (llmType === "openai") {
+      let finalBaseUrl = baseUrl && baseUrl.trim() ? baseUrl.trim() : undefined;
+      const headers: Record<string, string> = {};
+
+      if (
+        process.env.NODE_ENV === "development" &&
+        typeof window !== "undefined" &&
+        finalBaseUrl &&
+        !finalBaseUrl.includes("localhost") &&
+        !finalBaseUrl.includes("127.0.0.1")
+      ) {
+        headers["X-Target-Url"] = finalBaseUrl;
+        finalBaseUrl = window.location.origin + "/api/proxy";
+      }
+
       this.llm = new ChatOpenAI({
         modelName: safeModel,
         openAIApiKey: apiKey,
         configuration: {
-          baseURL: baseUrl && baseUrl.trim() ? baseUrl.trim() : undefined,
+          baseURL: finalBaseUrl,
+          defaultHeaders: headers,
         },
         temperature: llmSettings.temperature,
         maxTokens: llmSettings.maxTokens,

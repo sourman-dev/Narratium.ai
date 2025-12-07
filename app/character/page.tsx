@@ -78,7 +78,7 @@ interface Message {
  */
 export default function CharacterPage() {
   const searchParams = useSearchParams();
-  const characterId = searchParams.get("id");
+  const characterId = searchParams?.get("id");
   const { t, fontClass, serifFontClass } = useLanguage();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const {

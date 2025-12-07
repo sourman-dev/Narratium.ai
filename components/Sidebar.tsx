@@ -72,8 +72,8 @@ export default function Sidebar({ isOpen, toggleSidebar, openLoginModal, openAcc
   };
 
   const isHomeActive = pathname === "/";
-  const isGameAreaActive = pathname.startsWith("/character");
-  const isCreatorAreaActive = pathname.startsWith("/creator-input") || pathname.startsWith("/creator-area");
+  const isGameAreaActive = pathname?.startsWith("/character") || false;
+  const isCreatorAreaActive = pathname?.startsWith("/creator-input") || pathname?.startsWith("/creator-area") || false;
 
   return (
     <div

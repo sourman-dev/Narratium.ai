@@ -152,11 +152,28 @@ export class LLMNodeTools extends NodeTool {
     };
 
     if (config.llmType === "openai") {
+      let baseURL = config.baseUrl?.trim();
+      const headers: Record<string, string> = {};
+
+      // Auto-proxy for development environment when running on client
+      if (
+        process.env.NODE_ENV === "development" &&
+        typeof window !== "undefined" &&
+        baseURL &&
+        !baseURL.includes("localhost") &&
+        !baseURL.includes("127.0.0.1")
+      ) {
+        headers["X-Target-Url"] = baseURL;
+        baseURL = window.location.origin + "/api/proxy";
+        console.log(`[LLMNodeTools] Using local proxy for ${config.baseUrl}`);
+      }
+
       return new ChatOpenAI({
         modelName: safeModel,
         openAIApiKey: config.apiKey,
         configuration: {
-          baseURL: config.baseUrl?.trim() || undefined,
+          baseURL: baseURL,
+          defaultHeaders: headers,
         },
         temperature: config.temperature ?? defaultSettings.temperature,
         maxRetries: config.maxRetries ?? defaultSettings.maxRetries,

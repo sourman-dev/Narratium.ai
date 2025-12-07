@@ -40,10 +40,30 @@ export class MemoryManager {
     private apiKey: string,
     private baseUrl?: string,
   ) {
+    this.apiKey = apiKey;
+    this.baseUrl = baseUrl;
+
+    let embeddingBaseUrl = this.baseUrl;
+    const headers: Record<string, string> = {};
+
+    if (
+      process.env.NODE_ENV === "development" &&
+      typeof window !== "undefined" &&
+      embeddingBaseUrl &&
+      !embeddingBaseUrl.includes("localhost") &&
+      !embeddingBaseUrl.includes("127.0.0.1")
+    ) {
+      headers["X-Target-Url"] = embeddingBaseUrl;
+      embeddingBaseUrl = window.location.origin + "/api/proxy";
+    }
+
     this.embeddings = new OpenAIEmbeddings({
       apiKey: this.apiKey,
       modelName: "text-embedding-3-small",
-      configuration: this.baseUrl ? { baseURL: this.baseUrl } : undefined,
+      configuration: {
+        baseURL: embeddingBaseUrl,
+        defaultHeaders: headers,
+      },
     });
 
     this.textSplitter = new RecursiveCharacterTextSplitter({
@@ -234,11 +254,28 @@ export class MemoryManager {
     assistantMessage: string,
     context?: string,
   ): Promise<MemoryExtractionResult> {
+    let memoryBaseUrl = this.baseUrl;
+    const headers: Record<string, string> = {};
+
+    if (
+      process.env.NODE_ENV === "development" &&
+      typeof window !== "undefined" &&
+      memoryBaseUrl &&
+      !memoryBaseUrl.includes("localhost") &&
+      !memoryBaseUrl.includes("127.0.0.1")
+    ) {
+      headers["X-Target-Url"] = memoryBaseUrl;
+      memoryBaseUrl = window.location.origin + "/api/proxy";
+    }
+
     const llm = new ChatOpenAI({
       apiKey: this.apiKey,
       modelName: "gpt-4o-mini",
       temperature: 0.1,
-      configuration: this.baseUrl ? { baseURL: this.baseUrl } : undefined,
+      configuration: {
+        baseURL: memoryBaseUrl,
+        defaultHeaders: headers,
+      },
     });
 
     const prompt = ChatPromptTemplate.fromMessages([
