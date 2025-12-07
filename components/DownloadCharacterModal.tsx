@@ -33,6 +33,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { handleCharacterUpload } from "@/function/character/import";
 import { useLanguage } from "@/app/i18n";
 import { Toast } from "@/components/Toast";
+import { proxyFetch } from "@/lib/client/proxy-fetch";
 
 const GITHUB_API_URL = "https://api.github.com/repos/Narratium/Character-Card/contents";
 const RAW_BASE_URL = "https://raw.githubusercontent.com/Narratium/Character-Card/main/";
@@ -302,9 +303,9 @@ export default function DownloadCharacterModal({ isOpen, onClose, onImport }: Do
 
       try {
         // Fetch fresh data to check for updates
-        const res = await fetch(GITHUB_API_URL);
+        const res = await proxyFetch(GITHUB_API_URL);
         const data = await res.json();
-        
+
         if (Array.isArray(data)) {
           const pngFiles = data.filter((item: any) => item.name.endsWith(".png"));
           
@@ -379,7 +380,7 @@ export default function DownloadCharacterModal({ isOpen, onClose, onImport }: Do
     setImporting(file.name);
     setError(null);
     try {
-      const res = await fetch(file.download_url || RAW_BASE_URL + file.name);
+      const res = await proxyFetch(file.download_url || RAW_BASE_URL + file.name);
       if (!res.ok) throw new Error(t("downloadModal.downloadFailed"));
       const blob = await res.blob();
       const fileObj = new File([blob], file.name, { type: blob.type });
@@ -526,7 +527,7 @@ export default function DownloadCharacterModal({ isOpen, onClose, onImport }: Do
                 setLoading(true);
                 setLoadingStage("fetching");
                 try {
-                  const res = await fetch(GITHUB_API_URL);
+                  const res = await proxyFetch(GITHUB_API_URL);
                   const data = await res.json();
                   if (Array.isArray(data)) {
                     const pngFiles = data.filter((item: any) => item.name.endsWith(".png"));

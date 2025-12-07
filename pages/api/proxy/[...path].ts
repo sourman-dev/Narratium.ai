@@ -56,13 +56,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
 
-    const response = await fetch(targetUrl, {
+    const fetchOptions: any = {
       method: req.method,
       headers: headers,
-      body: req as any, // Cast req to any because fetch expects BodyInit
-      // @ts-ignore - Required for Node.js fetch with stream body
-      duplex: "half",
-    });
+    };
+
+    // Only attach body if it's not a GET/HEAD request
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      fetchOptions.body = req;
+      fetchOptions.duplex = "half";
+    }
+
+    const response = await fetch(targetUrl, fetchOptions);
 
     // Forward response status
     res.status(response.status);

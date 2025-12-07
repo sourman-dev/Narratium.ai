@@ -11,13 +11,19 @@ Implement a Next.js API route proxy to resolve CORS issues when making LLM API c
   - Implemented the proxy logic (headers, streaming, error handling).
   - Verified with frontend integration (via auto-detection logic).
   - Documented usage instructions (automatic).
+- [x] Phase 3: Integration with UI Components
+  - Update `components/DownloadCharacterModal.tsx` to use the proxy in development mode.
+  - Handle both `fetch` calls (metadata) and image loading if necessary (or verify if images are fine).
 
 ## Status
 - Status: Completed
 - Progress: 100%
-- Completed At: 2025-12-07 16:30
+- Completed At: 2025-12-07 17:00
 
 ## Completed Tasks
 - Modified `next.config.ts` to conditionally use `output: "export"` only in production.
 - Created `pages/api/proxy/[...path].ts` to forward requests with `X-Target-Url` header.
-- Updated `lib/nodeflow/LLMNode/LLMNodeTools.ts` to automatically detect development environment and use the proxy, injecting the `X-Target-Url` header transparently.
+- Updated `lib/nodeflow/LLMNode/LLMNodeTools.ts` to automatically detect development environment and use the proxy.
+- Updated `lib/client/proxy-fetch.ts` to provide a robust proxy fetching utility for client-side code.
+- Integrated `proxyFetch` into `components/DownloadCharacterModal.tsx`.
+- Fixed `pages/api/proxy/[...path].ts` to handle GET requests correctly (no body).
