@@ -147,7 +147,11 @@ export default function SettingsDropdown({ toggleModelSidebar }: SettingsDropdow
         <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-[#1c1c1c] border border-[#333333] z-50 overflow-hidden">
           <div className="py-1">
             <button
-              onClick={toggleLanguage}
+              onClick={() => {
+                const nextLang = language === "zh" ? "en" : language === "en" ? "vi" : "zh";
+                setLanguage(nextLang);
+                document.documentElement.lang = nextLang;
+              }}
               className="flex items-center w-full px-4 py-2 text-sm text-[#f4e8c1] hover:bg-[#252525] transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
@@ -158,7 +162,7 @@ export default function SettingsDropdown({ toggleModelSidebar }: SettingsDropdow
                 <path d="M22 22l-5-10-5 10"></path>
                 <path d="M14 18h6"></path>
               </svg>
-              {language === "zh" ? t("common.switchToEnglish") : t("common.switchToChinese")}
+              {language === "zh" ? t("common.switchToEnglish") : language === "en" ? t("common.switchToVietnamese") : t("common.switchToChinese")}
             </button>
             
             <button

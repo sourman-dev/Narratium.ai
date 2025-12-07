@@ -173,7 +173,7 @@ export class MemoryNodeTools extends NodeTool {
     systemMessage: string,
     apiKey: string,
     baseUrl?: string,
-    language: "zh" | "en" = "zh",
+    language: "zh" | "en" | "vi" = "zh",
     maxMemories: number = 5,
   ): Promise<{
     enhancedSystemMessage: string;
@@ -227,7 +227,7 @@ export class MemoryNodeTools extends NodeTool {
     conversationContext: string,
     apiKey: string,
     baseUrl?: string,
-    language: "zh" | "en" = "zh",
+    language: "zh" | "en" | "vi" = "zh",
   ): Promise<{
     success: boolean;
     extractedCount: number;
@@ -312,14 +312,22 @@ export class MemoryNodeTools extends NodeTool {
   /**
    * Private helper: Format retrieved memories for prompt injection
    */
-  private static formatMemoriesForPrompt(memories: any[], language: "zh" | "en"): string {
+  private static formatMemoriesForPrompt(memories: any[], language: "zh" | "en" | "vi"): string {
     if (!memories || memories.length === 0) {
-      return language === "zh" ? "无相关记忆" : "No relevant memories";
+      if (language === "zh") return "无相关记忆";
+      if (language === "vi") return "Không có ký ức liên quan";
+      return "No relevant memories";
     }
 
-    const header = language === "zh" ? "相关记忆：" : "Relevant memories:";
+    let header = "Relevant memories:";
+    if (language === "zh") header = "相关记忆：";
+    else if (language === "vi") header = "Ký ức liên quan:";
+
     const memoryTexts = memories.map((memory, index) => {
-      const typeLabel = language === "zh" ? this.getChineseTypeLabel(memory.type) : memory.type;
+      let typeLabel = memory.type;
+      if (language === "zh") typeLabel = this.getChineseTypeLabel(memory.type);
+      else if (language === "vi") typeLabel = this.getVietnameseTypeLabel(memory.type);
+
       return `${index + 1}. [${typeLabel}] ${memory.content}`;
     });
 
@@ -357,12 +365,33 @@ export class MemoryNodeTools extends NodeTool {
   }
 
   /**
+   * Private helper: Get Vietnamese labels for memory types
+   */
+  private static getVietnameseTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      "fact": "Sự thật",
+      "relationship": "Mối quan hệ",
+      "event": "Sự kiện",
+      "preference": "Sở thích",
+      "emotion": "Cảm xúc",
+      "geography": "Địa lý",
+      "concept": "Khái niệm",
+      "dialogue": "Đối thoại",
+    };
+    return labels[type] || type;
+  }
+
+  /**
    * Private helper: Create fallback result for memory retrieval
    */
-  private static createFallbackResult(systemMessage: string, language: "zh" | "en") {
+  private static createFallbackResult(systemMessage: string, language: "zh" | "en" | "vi") {
+    let memoryPrompt = "No relevant memories";
+    if (language === "zh") memoryPrompt = "无相关记忆";
+    else if (language === "vi") memoryPrompt = "Không có ký ức liên quan";
+
     return {
       enhancedSystemMessage: systemMessage,
-      memoryPrompt: language === "zh" ? "无相关记忆" : "No relevant memories",
+      memoryPrompt,
       retrievedMemories: [],
       memoryCount: 0,
     };
@@ -374,27 +403,27 @@ export class MemoryNodeTools extends NodeTool {
   private static enhanceSystemMessageWithMemory(
     originalSystemMessage: string,
     memoryContext: MemoryContext,
-    language: "zh" | "en",
+    language: "zh" | "en" | "vi",
   ): string {
     if (!memoryContext.memoryPrompt || memoryContext.activeMemories.length === 0) {
       return originalSystemMessage;
     }
 
     // Check if memory context already exists to avoid duplication
-    const memoryKeywords = language === "zh" 
-      ? ["记忆", "回忆", "相关记忆"] 
-      : ["memory", "memories", "relevant memories"];
-    
-    const hasMemoryContext = memoryKeywords.some(keyword => 
+    let memoryKeywords = ["memory", "memories", "relevant memories"];
+    if (language === "zh") memoryKeywords = ["记忆", "回忆", "相关记忆"];
+    else if (language === "vi") memoryKeywords = ["ký ức", "hồi ức", "ký ức liên quan"];
+
+    const hasMemoryContext = memoryKeywords.some(keyword =>
       originalSystemMessage.toLowerCase().includes(keyword.toLowerCase()),
     );
 
     if (hasMemoryContext) {
       // Replace existing memory placeholder
-      const memoryPlaceholders = language === "zh" 
-        ? ["{{memories}}", "{{相关记忆}}", "{{记忆}}"]
-        : ["{{memories}}", "{{relevant_memories}}", "{{memory}}"];
-      
+      let memoryPlaceholders = ["{{memories}}", "{{relevant_memories}}", "{{memory}}"];
+      if (language === "zh") memoryPlaceholders = ["{{memories}}", "{{相关记忆}}", "{{记忆}}"];
+      else if (language === "vi") memoryPlaceholders = ["{{memories}}", "{{ký_ức_liên_quan}}", "{{ký_ức}}"];
+
       let enhancedMessage = originalSystemMessage;
       for (const placeholder of memoryPlaceholders) {
         if (enhancedMessage.includes(placeholder)) {
@@ -402,17 +431,17 @@ export class MemoryNodeTools extends NodeTool {
           break;
         }
       }
-      
+
       // If no placeholder found, append memory context
       if (enhancedMessage === originalSystemMessage) {
-        const separator = language === "zh" ? "\n\n" : "\n\n";
+        const separator = "\n\n";
         enhancedMessage = `${originalSystemMessage}${separator}${memoryContext.memoryPrompt}`;
       }
-      
+
       return enhancedMessage;
     } else {
       // Add memory context to system message
-      const separator = language === "zh" ? "\n\n" : "\n\n";
+      const separator = "\n\n";
       return `${originalSystemMessage}${separator}${memoryContext.memoryPrompt}`;
     }
   }

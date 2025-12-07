@@ -1,14 +1,14 @@
-export function adaptText(text: string, language: "en" | "zh", username?: string, charName?: string): string {
+export function adaptText(text: string, language: "en" | "zh" | "vi", username?: string, charName?: string): string {
   let parsed = text.replace(/<br\s*\/?>/gi, "\n");
-  const userReplacement = username ?? (language === "zh" ? "我" : "I");
+  const userReplacement = username ?? (language === "zh" ? "我" : (language === "vi" ? "Tôi" : "I"));
   parsed = parsed.replace(/{{user}}/g, userReplacement);
   parsed = parsed.replace(/{{char}}/g, charName ?? "");
   return parsed;
 }
-  
+
 export function adaptCharacterData(
   characterData: any,
-  language: "en" | "zh",
+  language: "en" | "zh" | "vi",
   username?: string,
 ): any {
   const result = { ...characterData };

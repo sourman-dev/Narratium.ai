@@ -5,7 +5,7 @@ import { PromptLibrary, PromptKey } from "@/lib/prompts/preset-prompts";
 export class PresetAssembler {
   static assemblePrompts(
     prompts: PresetPrompt[],
-    language: "zh" | "en" = "zh",
+    language: "zh" | "en" | "vi" = "zh",
     fastModel: boolean,
     contextData: { username?: string; charName?: string; number?: number } = {},
     systemPresetType: PromptKey = "mirror_realm",
@@ -172,7 +172,7 @@ export class PresetAssembler {
     };
   }
 
-  private static _getDefaultFramework(language: "zh" | "en" = "zh", contextData: { username?: string; charName?: string; number?: number }, systemPresetType: PromptKey = "mirror_realm"): { systemMessage: string; userMessage: string } {
+  private static _getDefaultFramework(language: "zh" | "en" | "vi" = "zh", contextData: { username?: string; charName?: string; number?: number }, systemPresetType: PromptKey = "mirror_realm"): { systemMessage: string; userMessage: string } {
     const orderedSystemIdentifiers = [
       "main",
       "worldInfoBefore",
@@ -290,7 +290,7 @@ export class PresetAssembler {
 
   private static _formatPromptContent(
     prompt: PresetPrompt,
-    language: "zh" | "en",
+    language: "zh" | "en" | "vi",
     contextData: { username?: string; charName?: string; number?: number },
   ): string {
     let contentToAppend = "";

@@ -290,7 +290,9 @@
     "startSessionFirst": "请先开始一个游戏会话才能查看记忆",
     "loadingMemories": "正在加载记忆...",
     "jumpToNode": "跳转到此节点",
-    "expandMemory": "展开记忆内容"
+    "expandMemory": "展开记忆内容",
+    "requestFailed": "请求失败",
+    "checkNetworkOrAPI": "请检查网络连接或API配置"
   },
   "characterCardsPage": {
     "title": "角色卡",

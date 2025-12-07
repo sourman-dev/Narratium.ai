@@ -337,6 +337,17 @@ export default function UserTour({ steps, isVisible, onComplete, onSkip }: UserT
               >
                 English
               </button>
+              <button
+                onClick={() => {
+                  setLanguage("vi");
+                  document.documentElement.lang = "vi";
+                  localStorage.setItem("language", "vi");
+                  nextStep();
+                }}
+                className={`px-4 py-1.5 text-sm bg-[#f9c86d] text-[#1a1816] rounded hover:bg-[#c0a480] transition-colors font-medium ${serifFontClass}`}
+              >
+                Tiếng Việt
+              </button>
             </div>
           ) : (
             <button

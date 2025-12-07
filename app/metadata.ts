@@ -7,6 +7,7 @@ export const homeMetadata: Metadata = {
     languages: {
       "en-US": "/en",
       "zh-CN": "/zh",
+      "vi-VN": "/vi",
     },
   },
 }; 

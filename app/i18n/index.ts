@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-export const LANGUAGES = ["zh", "en"] as const;
+export const LANGUAGES = ["zh", "en", "vi"] as const;
 export type Language = typeof LANGUAGES[number];
 
 export const DEFAULT_LANGUAGE: Language = "zh";
