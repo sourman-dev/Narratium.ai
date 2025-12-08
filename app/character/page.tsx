@@ -248,7 +248,7 @@ export default function CharacterPage() {
       if (!currentNode) throw new Error("Current node not found");
 
       const contentToTranslate =
-        currentNode.parsedContent?.regexResult || currentNode.content;
+        currentNode.parsedContent?.regexResult || currentNode.fullResponse || currentNode.assistantResponse;
 
       let translatedText = "";
 

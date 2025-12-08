@@ -146,10 +146,12 @@ export class PresetAssembler {
       finalUserMessageParts.push("注意：必须严格遵循上述XML标签格式，所有内容都必须包含在output标签内。");
     } else if (language === "vi") {
       finalUserMessageParts.push("【Yêu cầu định dạng đầu ra】");
-      finalUserMessageParts.push(`Vui lòng tuân thủ nghiêm ngặt định dạng sau cho phản hồi của bạn và xuất ra nội dung phản hồi dài ${contextData.number} ký tự, sử dụng tiếng Việt.`);
+      finalUserMessageParts.push(`QUAN TRỌNG: Bạn PHẢI xuất ra phản hồi có độ dài CHÍNH XÁC ${contextData.number} từ tiếng Việt (không được ít hơn). Hãy mở rộng mô tả chi tiết, tâm lý nhân vật, và bối cảnh môi trường để đạt đủ độ dài yêu cầu.`);
+      finalUserMessageParts.push("");
+      finalUserMessageParts.push("Vui lòng tuân thủ nghiêm ngặt định dạng sau cho phản hồi của bạn:");
       finalUserMessageParts.push("");
       finalUserMessageParts.push("<output>");
-      finalUserMessageParts.push("Xuất nội dung phản hồi chính của bạn ở đây, bao gồm đối thoại của nhân vật, hành động, mô tả tâm lý, v.v.");
+      finalUserMessageParts.push(`Xuất nội dung phản hồi chính của bạn ở đây (${contextData.number} từ), bao gồm đối thoại của nhân vật, hành động, mô tả tâm lý, bối cảnh môi trường, cảm xúc, suy nghĩ nội tâm, v.v. Hãy kể chuyện một cách chi tiết và sinh động.`);
       finalUserMessageParts.push("");
       finalUserMessageParts.push("<next_prompts>");
       finalUserMessageParts.push("- [Đưa ra một quyết định quan trọng dựa trên trạng thái hiện tại của người chơi, kích hoạt sự tiến triển của cốt truyện chính hoặc bắt đầu nhiệm vụ phụ, tường thuật ngôi thứ ba, trong vòng 15 từ]");
@@ -162,7 +164,7 @@ export class PresetAssembler {
       finalUserMessageParts.push("</events>");
       finalUserMessageParts.push("</output>");
       finalUserMessageParts.push("");
-      finalUserMessageParts.push("Lưu ý: Bạn phải tuân thủ nghiêm ngặt định dạng thẻ XML ở trên. Tất cả nội dung phải được chứa trong thẻ output.");
+      finalUserMessageParts.push(`Lưu ý: Bạn PHẢI tuân thủ nghiêm ngặt định dạng thẻ XML ở trên. Tất cả nội dung phải được chứa trong thẻ output. PHẢI đạt đủ ${contextData.number} từ tiếng Việt trong phần nội dung chính.`);
     } else {
       finalUserMessageParts.push("【Output Format Requirements】");
       finalUserMessageParts.push(`Please strictly follow the format below for your response, and output a response of ${contextData.number} characters, and output in English.`);
@@ -279,13 +281,15 @@ export class PresetAssembler {
       finalUserMessageParts.push("注意：必须严格遵循上述XML标签格式，所有内容都必须包含在output标签内。");
     } else if (language === "vi") {
       finalUserMessageParts.push("【Yêu cầu định dạng đầu ra】");
-      finalUserMessageParts.push(`Vui lòng tuân thủ nghiêm ngặt định dạng sau cho phản hồi của bạn và xuất ra nội dung phản hồi dài ${contextData.number} ký tự`);
+      finalUserMessageParts.push(`QUAN TRỌNG: Bạn PHẢI xuất ra phản hồi có độ dài CHÍNH XÁC ${contextData.number} từ tiếng Việt (không được ít hơn). Hãy mở rộng mô tả chi tiết, tâm lý nhân vật, và bối cảnh môi trường để đạt đủ độ dài yêu cầu.`);
       finalUserMessageParts.push("");
       finalUserMessageParts.push("【Yêu cầu ngôn ngữ đầu ra】");
       finalUserMessageParts.push("Sử dụng tiếng Việt, nội dung văn bản, nội dung thanh trạng thái đều sử dụng tiếng Việt, nếu trước đó sử dụng tiếng Anh thì vẫn sử dụng tiếng Việt.");
       finalUserMessageParts.push("");
+      finalUserMessageParts.push("Vui lòng tuân thủ nghiêm ngặt định dạng sau cho phản hồi của bạn:");
+      finalUserMessageParts.push("");
       finalUserMessageParts.push("<output>");
-      finalUserMessageParts.push("Xuất nội dung phản hồi chính của bạn ở đây, bao gồm đối thoại của nhân vật, hành động, mô tả tâm lý, v.v.");
+      finalUserMessageParts.push(`Xuất nội dung phản hồi chính của bạn ở đây (${contextData.number} từ), bao gồm đối thoại của nhân vật, hành động, mô tả tâm lý, bối cảnh môi trường, cảm xúc, suy nghĩ nội tâm, v.v. Hãy kể chuyện một cách chi tiết và sinh động.`);
       finalUserMessageParts.push("");
       finalUserMessageParts.push("<next_prompts>");
       finalUserMessageParts.push("- [Đưa ra một quyết định quan trọng dựa trên trạng thái hiện tại của người chơi, kích hoạt sự tiến triển của cốt truyện chính hoặc bắt đầu nhiệm vụ phụ, tường thuật ngôi thứ ba, trong vòng 15 từ]");
@@ -298,7 +302,7 @@ export class PresetAssembler {
       finalUserMessageParts.push("</events>");
       finalUserMessageParts.push("</output>");
       finalUserMessageParts.push("");
-      finalUserMessageParts.push("Lưu ý: Bạn phải tuân thủ nghiêm ngặt định dạng thẻ XML ở trên. Tất cả nội dung phải được chứa trong thẻ output.");
+      finalUserMessageParts.push(`Lưu ý: Bạn PHẢI tuân thủ nghiêm ngặt định dạng thẻ XML ở trên. Tất cả nội dung phải được chứa trong thẻ output. PHẢI đạt đủ ${contextData.number} từ tiếng Việt trong phần nội dung chính.`);
     } else {
       finalUserMessageParts.push("【Output Format Requirements】");
       finalUserMessageParts.push(`Please strictly follow the format below for your response, and output a response of ${contextData.number} characters`);

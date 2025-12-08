@@ -4,14 +4,14 @@ import { DialogueMessage } from "@/lib/models/character-dialogue-model";
 import { adaptText } from "@/lib/adapter/tagReplacer";
 
 export interface PromptAssemblerOptions {
-  language: "zh" | "en";
+  language: "zh" | "en" | "vi";
   contextWindow?: number;
 }
 
 export class PromptAssembler {
-  private language: "zh" | "en";
+  private language: "zh" | "en" | "vi";
   private contextWindow: number;
-  
+
   constructor(options: PromptAssemblerOptions) {
     this.language = options.language || "zh";
     this.contextWindow = options.contextWindow || 5;

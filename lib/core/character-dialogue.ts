@@ -5,7 +5,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { PromptAssembler } from "@/lib/core/prompt-assembler";
 import { RunnablePassthrough } from "@langchain/core/runnables";
-import { getCharacterCompressorPromptZh, getCharacterCompressorPromptEn } from "@/lib/prompts/character-prompts";
+import { getCharacterCompressorPromptZh, getCharacterCompressorPromptEn, getCharacterCompressorPromptVi } from "@/lib/prompts/character-prompts";
 import { CharacterHistory } from "@/lib/core/character-history";
 import { DialogueOptions } from "@/lib/models/character-dialogue-model";
 
@@ -14,7 +14,7 @@ export class CharacterDialogue {
   history: CharacterHistory;
   llm: any;
   dialogueChain: RunnablePassthrough | null = null;
-  language: "zh" | "en" = "zh";
+  language: "zh" | "en" | "vi" = "zh";
   promptAssembler: PromptAssembler;
 
   constructor(character: Character) {
@@ -199,6 +199,11 @@ export class CharacterDialogue {
         compressorPrompt = ChatPromptTemplate.fromMessages([
           ["system", ""],
           ["user", getCharacterCompressorPromptZh(userInput, story)],
+        ]);
+      } else if (this.language === "vi") {
+        compressorPrompt = ChatPromptTemplate.fromMessages([
+          ["system", ""],
+          ["user", getCharacterCompressorPromptVi(userInput, story)],
         ]);
       } else {
         compressorPrompt = ChatPromptTemplate.fromMessages([

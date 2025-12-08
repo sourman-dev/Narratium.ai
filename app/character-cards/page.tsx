@@ -37,6 +37,7 @@ import { handleCharacterUpload } from "@/function/character/import";
 import { trackButtonClick } from "@/utils/google-analytics";
 import { moveToTop } from "@/function/character/move-to-top";
 import { Toast } from "@/components/Toast";
+import { proxyFetch } from "@/lib/client/proxy-fetch";
 
 /**
  * Interface defining the structure of a character object
@@ -248,7 +249,7 @@ export default function CharacterCards() {
     setIsDownloadingPresets(true);
     try {
       // Fetch available character files from GitHub
-      const response = await fetch("https://api.github.com/repos/Narratium/Character-Card/contents");
+      const response = await proxyFetch("https://api.github.com/repos/Narratium/Character-Card/contents");
       const data = await response.json();
       
       if (!Array.isArray(data)) {
@@ -272,7 +273,7 @@ export default function CharacterCards() {
       // Download and import each preset character
       for (const file of pngFiles) {
         try {
-          const fileResponse = await fetch(file.download_url || `https://raw.githubusercontent.com/Narratium/Character-Card/main/${file.name}`);
+          const fileResponse = await proxyFetch(file.download_url || `https://raw.githubusercontent.com/Narratium/Character-Card/main/${file.name}`);
           if (!fileResponse.ok) {
             console.error(`Failed to download ${file.name}`);
             showErrorToast(`Failed to download ${file.name}`);

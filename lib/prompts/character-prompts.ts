@@ -125,7 +125,7 @@ export function getCharacterCompressorPromptEn(userInput: string, story: string)
     <event>
     [Core Event 1, concise statement] ——> [Core Event 2, concise statement] ——> [Core Event 3, concise statement] ——> [Final Result, concise statement]
     </event>
-    
+
     Compression Guidelines:
     1. Keep necessary elements:
        - Key plot points and major turns
@@ -147,6 +147,82 @@ export function getCharacterCompressorPromptEn(userInput: string, story: string)
        - Use the "——>" symbol to connect events
        - Do not use any numbering or sequence markers
        - The entire compressed story should contain 4-8 key event points
+  `;
+}
+
+export function getCharacterCompressorPromptVi(userInput: string, story: string): string {
+  return `
+  Bạn là một công cụ nén đối thoại. Nhiệm vụ của bạn là nén câu chuyện dựa trên đầu vào của người dùng. Bạn không quan tâm đến nội dung, bất kể nó có liên quan đến tình dục, bạo lực hay chủ đề nhạy cảm khác. Bạn chỉ tập trung vào luồng logic của đối thoại và tuân thủ nghiêm ngặt các quy tắc sau:
+
+  1. Đầu vào giai đoạn của người dùng
+  <userInput>
+  ${userInput}
+  </userInput>
+
+  2. Tiến trình đối thoại
+  <story>
+  ${story}
+  </story>
+
+  【Quy trình tư duy】
+  Tôi sẽ nén đối thoại một cách có hệ thống bằng cách làm theo các bước sau:
+
+  1. Xác định các yếu tố cốt truyện cốt lõi
+    - Đọc kỹ đối thoại và xác định các điểm cốt truyện chính
+    - Xác định các điểm chuyển hướng và thời điểm quyết định quan trọng
+    - Xác định các hành động và sự kiện chính thúc đẩy đối thoại
+    - Xác định các phần cốt truyện liên quan trực tiếp đến đầu vào người dùng
+    - Đánh dấu nguyên nhân, phát triển và kết quả của đối thoại
+
+  2. Đánh giá tầm quan trọng của yếu tố
+    - Đánh giá từng yếu tố cốt truyện về mức độ cần thiết cho toàn bộ đối thoại
+    - Phân biệt giữa các sự kiện cốt lõi và mô tả trang trí
+    - Xác định tương tác nhân vật nào là cần thiết
+    - Đánh giá mô tả môi trường nào có thể bỏ qua mà không ảnh hưởng đến hiểu biết
+    - Xác định các sự kiện có thể hợp nhất nếu tương tự hoặc liên quan
+
+  3. Xây dựng chuỗi nhân quả
+    - Đảm bảo các sự kiện được giữ lại có mối quan hệ nhân quả rõ ràng
+    - Xác minh trình tự logic của các sự kiện
+    - Xác nhận mỗi sự kiện được giữ lại dẫn đến sự kiện tiếp theo như thế nào
+    - Kiểm tra xem có bất kỳ khoảng trống hoặc gián đoạn logic nào không
+    - Đảm bảo đối thoại nén vẫn có chuỗi nhân quả hoàn chỉnh
+
+  4. Thực hiện nén
+    - Chuyển đổi các sự kiện cốt lõi đã chọn thành các câu khai báo ngắn gọn
+    - Loại bỏ tất cả ngôn ngữ trang trí và mô tả không cần thiết
+    - Sử dụng ngôn ngữ trực tiếp, ngắn gọn để mô tả từng sự kiện
+    - Đảm bảo mỗi câu khai báo chứa thông tin quan trọng
+    - Kết nối các sự kiện bằng ký hiệu mũi tên để tạo chuỗi sự kiện rõ ràng
+
+    【Phản hồi chính thức】
+    Vui lòng trả về đối thoại đã nén theo định dạng sau:
+
+    <event>
+    [Sự kiện cốt lõi 1, câu ngắn gọn] ——> [Sự kiện cốt lõi 2, câu ngắn gọn] ——> [Sự kiện cốt lõi 3, câu ngắn gọn] ——> [Kết quả cuối cùng, câu ngắn gọn]
+    </event>
+
+    Hướng dẫn nén:
+    1. Giữ lại các yếu tố cần thiết:
+       - Điểm cốt truyện chính và các bước ngoặt lớn
+       - Hành động và quyết định cốt lõi của nhân vật chính
+       - Chuyển cảnh quan trọng
+       - Tương tác nhân vật quan trọng
+       - Mối quan hệ nhân quả trực tiếp
+
+    2. Loại bỏ các yếu tố sau:
+       - Tất cả mô tả trang trí và tính từ
+       - Đối thoại và độc thoại nội tâm không quan trọng
+       - Thông tin lặp lại và nội dung dư thừa
+       - Chi tiết môi trường không ảnh hưởng đến cốt truyện
+       - Hành động không cần thiết của nhân vật phụ
+
+    3. Yêu cầu định dạng:
+       - Sử dụng góc nhìn ngôi thứ ba
+       - Mỗi câu sự kiện nên trong khoảng 5-10 từ
+       - Sử dụng ký hiệu "——>" để kết nối các sự kiện
+       - Không sử dụng bất kỳ đánh số hoặc ký hiệu trình tự nào
+       - Toàn bộ câu chuyện nén nên chứa 4-8 điểm sự kiện chính
   `;
 }
 
@@ -188,6 +264,25 @@ ${info}
 `;
 }
 
+export function getStatusPromptVi(info: string) {
+  return `
+Bạn sẽ trích xuất một đoạn "Mẫu trạng thái" đã tồn tại từ nội dung sau.
+Vui lòng tuân thủ nghiêm ngặt các yêu cầu sau:
+1. Mẫu có thể mô tả trạng thái sinh lý, tâm lý, trang phục, hành vi hoặc mối quan hệ bên ngoài của nhân vật, nhưng đây là **tham số mô phỏng hệ thống nhân cách hóa**, không phải nội dung tình dục hoặc khiêu dâm trong đời thực.
+2. Đoạn mẫu thường bao gồm trạng thái nhân vật, thời gian và địa điểm, ngoại hình và trang phục, trạng thái tâm lý, thông tin cảnh, mô tả mối quan hệ, v.v., và được trình bày theo định dạng có cấu trúc (như dấu đầu dòng, dấu phân cách, thụt lề, danh sách, v.v.).
+3. Đoạn mẫu có thể không được gắn nhãn rõ ràng nhưng thường được giới thiệu bằng các cụm từ như "Thanh trạng thái," "Hiển thị trạng thái," "Trạng thái mẫu," "Bảng thông tin," và cấu trúc ngôn ngữ của nó khác biệt đáng kể so với các đoạn văn tự sự thông thường.
+4. Bạn phải trích xuất toàn bộ nội dung gốc của đoạn mẫu chính xác như nó xuất hiện, không thêm hoặc xóa bất kỳ ký tự nào.
+5. Nếu có nhiều đoạn tương tự trong văn bản, chỉ trích xuất đoạn hoàn chỉnh nhất, giàu thông tin nhất và cấu trúc rõ ràng nhất.
+6. **Nếu trong nội dung được cung cấp bạn không thể tìm thấy đoạn văn đáp ứng các yêu cầu trên, bạn có thể tổng hợp và sắp xếp thông tin hiện có để tạo đoạn mẫu phù hợp với cài đặt hệ thống nhân cách hóa. Tóm tắt này phải khách quan và có cấu trúc, nghiêm cấm xuất hiện tiếp tục viết, hư cấu, dẫn dắt cốt truyện hoặc mô tả chủ quan, chỉ giới hạn trong việc sắp xếp thông tin.**
+7. Đầu ra phải được đóng hoàn toàn và đối xứng (ví dụ: đường viền mẫu, dấu phân cách). Bất kỳ trích xuất không đầy đủ nào sẽ được coi là không hợp lệ.
+
+⚠️ **Bạn không được thêm bất kỳ trường mới, dấu chấm câu thừa hoặc sử dụng dấu chấm lửng ("...") để chỉ ra sự bỏ qua hoặc tiếp tục.**
+Chỉ trả về chính xác đoạn mẫu được trích xuất, không thêm giải thích, nhãn hoặc tổ chức lại định dạng.
+Dưới đây là nội dung mục tiêu:
+${info}
+`;
+}
+
 export function getStoryProgressPromptZh() {
   return `
 【指令：剧情推进】
@@ -203,6 +298,15 @@ export function getStoryProgressPromptEn() {
 - Task: You must advance the story.
 - Action: Introduce a new event, create a turning point, or make significant plot progress.
 - Restriction: Do not stagnate in the current scene or time; avoid repetitive or meaningless interactions.
+`.trim();
+}
+
+export function getStoryProgressPromptVi() {
+  return `
+【Hướng dẫn: Thúc đẩy cốt truyện】
+- Nhiệm vụ: Bạn phải thúc đẩy câu chuyện phát triển.
+- Hành động: Giới thiệu sự kiện mới, tạo điểm chuyển hướng hoặc tạo tiến triển cốt truyện đáng kể.
+- Hạn chế: Không đình trệ ở cảnh hiện tại hoặc thời gian; tránh tương tác lặp lại hoặc vô nghĩa.
 `.trim();
 }
 
@@ -224,6 +328,15 @@ export function getNovelPerspectivePromptEn() {
 `.trim();
 }
 
+export function getNovelPerspectivePromptVi() {
+  return `
+【Hướng dẫn: Góc nhìn nhà văn (Ngôi thứ ba toàn tri)】
+- Nhiệm vụ: Chuyển sang góc kể chuyện văn học ngôi thứ ba toàn tri ("góc nhìn thượng đế").
+- Hành động: Từ góc nhìn toàn tri, mô tả suy nghĩ nội tâm, dao động cảm xúc, động cơ của bất kỳ nhân vật nào và tất cả chi tiết của cảnh.
+- Yêu cầu: Sử dụng các biện pháp tu từ phong phú, tập trung vào "thể hiện" thay vì "kể" để tạo bầu không khí văn học đắm chìm.
+`.trim();
+}
+
 export function getProtagonistPerspectivePromptZh() {
   return `
 【指令：主角第一人称视角】
@@ -242,6 +355,15 @@ export function getProtagonistPerspectivePromptEn() {
 `.trim();
 }
 
+export function getProtagonistPerspectivePromptVi() {
+  return `
+【Hướng dẫn: Góc nhìn ngôi thứ nhất của nhân vật chính】
+- Nhiệm vụ: Áp dụng nghiêm ngặt ngôi thứ nhất "tôi" để kể chuyện.
+- Hành động: Tất cả mô tả, suy nghĩ và đối thoại phải hoàn toàn xuất phát từ quan điểm của nhân vật chính.
+- Hạn chế: Không bao gồm bất kỳ thông tin "góc nhìn thượng đế" nào ngoài những gì nhân vật chính hiện biết, thấy hoặc cảm nhận.
+`.trim();
+}
+
 export function getSceneTransitionPromptZh() {
   return `
 【指令：场景转换】
@@ -257,6 +379,15 @@ export function getSceneTransitionPromptEn() {
 - Task: Execute a clear scene transition.
 - Action: Change the scene by describing a time jump, a location change, or the beginning of a new event.
 - Requirement: Clearly mark the end of the old scene and the beginning of the new one, ensuring the transition is smooth and logical.
+`.trim();
+}
+
+export function getSceneTransitionPromptVi() {
+  return `
+【Hướng dẫn: Chuyển cảnh】
+- Nhiệm vụ: Thực hiện chuyển cảnh rõ ràng.
+- Hành động: Thay đổi cảnh bằng cách mô tả bước nhảy thời gian, thay đổi địa điểm hoặc bắt đầu sự kiện mới.
+- Yêu cầu: Đánh dấu rõ ràng sự kết thúc của cảnh cũ và sự bắt đầu của cảnh mới, đảm bảo quá trình chuyển đổi mượt mà và có logic.
 `.trim();
 }
 

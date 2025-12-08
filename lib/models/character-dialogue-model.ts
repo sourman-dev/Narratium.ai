@@ -15,7 +15,7 @@ export interface DialogueOptions {
   temperature?: number;
   maxTokens?: number;
   streaming?: boolean;
-  language?: "zh" | "en";
+  language?: "zh" | "en" | "vi";
   contextWindow?: number;
 }
 

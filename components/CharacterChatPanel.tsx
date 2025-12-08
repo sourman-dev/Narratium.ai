@@ -663,7 +663,7 @@ export default function CharacterChatPanel({
   return (
     <div className="flex flex-col h-full max-h-screen">
       <div
-        className="flex-grow overflow-y-auto p-6 fantasy-scrollbar"
+        className="flex-grow overflow-y-auto p-6 pb-32 md:pb-6 fantasy-scrollbar"
         ref={scrollRef}
       >
         <div className="max-w-4xl mx-auto">
@@ -1189,7 +1189,7 @@ export default function CharacterChatPanel({
           )}
         </div>
       </div>
-
+      {/* User Input */}
       <div className="sticky bottom-0 bg-[#1a1816] border-t border-[#534741] pt-6 pb-6 px-5 z-5 mt-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.2)]">
         {suggestedInputs.length > 0 && !isSending && (
           <div className="relative max-w-4xl mx-auto">
